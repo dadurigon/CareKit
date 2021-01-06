@@ -1,21 +1,21 @@
 /*
  Copyright (c) 2019, Apple Inc. All rights reserved.
- 
+
  Redistribution and use in source and binary forms, with or without modification,
  are permitted provided that the following conditions are met:
- 
+
  1.  Redistributions of source code must retain the above copyright notice, this
  list of conditions and the following disclaimer.
- 
+
  2.  Redistributions in binary form must reproduce the above copyright notice,
  this list of conditions and the following disclaimer in the documentation and/or
  other materials provided with the distribution.
- 
+
  3. Neither the name of the copyright holder(s) nor the names of any contributors
  may be used to endorse or promote products derived from this software without
  specific prior written permission. No license is granted to the trademarks of
  the copyright holders even if such marks are included in this software.
- 
+
  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -139,7 +139,7 @@ public struct OCKOutcomeValue: Codable, Equatable, OCKObjectCompatible, CustomSt
         }
     }
 
-    /// An optional property that can be used to specify what kind of value this is (e.g. blood pressure, qualatative stress, weight)
+    /// An optional property that can be used to specify what kind of value this is (e.g. blood pressure, qualitative stress, weight)
     public var kind: String?
 
     /// The units for this measurement.
@@ -218,7 +218,7 @@ public struct OCKOutcomeValue: Codable, Equatable, OCKObjectCompatible, CustomSt
     }
 
     /// Checks if two `OCKOutcomeValue`s have equal value properties, without checking their other properties.
-    func hasSameValueAs(_ other: OCKOutcomeValue) -> Bool {
+    private func hasSameValueAs(_ other: OCKOutcomeValue) -> Bool {
         switch type {
         case .binary: return dataValue == other.dataValue
         case .boolean: return booleanValue == other.booleanValue
@@ -226,6 +226,17 @@ public struct OCKOutcomeValue: Codable, Equatable, OCKObjectCompatible, CustomSt
         case .double: return doubleValue == other.doubleValue
         case .integer: return integerValue == other.integerValue
         case .text: return stringValue == other.stringValue
+        }
+    }
+
+    // The value as an `NSNumber`. This property can be useful when comparing outcome values with an underlying
+    // type of Bool, Double, or Int against one another.
+    public var numberValue: NSNumber? {
+        switch type {
+        case .boolean: return NSNumber(value: booleanValue!)
+        case .double: return NSNumber(value: doubleValue!)
+        case .integer: return NSNumber(value: integerValue!)
+        default: return nil
         }
     }
 }
